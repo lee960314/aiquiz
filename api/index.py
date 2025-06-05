@@ -267,7 +267,7 @@ def health_check():
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "uptime_seconds": (datetime.now() - start_time).total_seconds(),
-        "version": "2.0",
+        "version": "2.1",
         "platform": "Vercel"
     })
 
@@ -423,7 +423,7 @@ def get_stats():
         "requests_by_endpoint": dict(request_stats),
         "active_connections": len(request_times),
         "server_time": datetime.now().isoformat(),
-        "version": "2.0",
+        "version": "2.1",
         "platform": "Vercel"
     })
 
