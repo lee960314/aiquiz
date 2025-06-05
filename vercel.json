@@ -1,0 +1,15 @@
+{
+  "env": {
+    "DEEPSEEK_API_KEY": "sk-XkB99PsvVahJDwpvmYwcGsf8Xvtub3zuql9Jw30WiTrQlp8E"
+  },
+  "build": {
+    "env": {
+      "DEEPSEEK_API_KEY": "sk-XkB99PsvVahJDwpvmYwcGsf8Xvtub3zuql9Jw30WiTrQlp8E"
+    }
+  },
+  "functions": {
+    "src/app/api/analyze/route.ts": {
+      "maxDuration": 30
+    }
+  }
+} 
