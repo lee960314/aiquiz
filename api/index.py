@@ -427,5 +427,9 @@ def get_stats():
         "platform": "Vercel"
     })
 
-# Vercel을 위한 핸들러 (이 부분이 중요!)
-handler = app 
+# Vercel을 위한 핸들러 - 이것이 핵심!
+def handler(request):
+    return app
+
+# Vercel entry point
+app.wsgi_app = handler 
