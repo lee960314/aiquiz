@@ -1,0 +1,24 @@
+// Firebase Storage 보안 규칙
+// Firebase Console > Storage > Rules 탭에서 이 규칙을 적용하세요
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // quiz-images 폴더: 인증된 사용자만 접근 가능
+    match /quiz-images/{userId}/{allPaths=**} {
+      // 읽기: 로그인한 사용자이고, 자신의 폴더에만 접근 가능
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // 쓰기: 로그인한 사용자이고, 자신의 폴더에만 업로드 가능
+      allow write: if request.auth != null 
+                   && request.auth.uid == userId
+                   && request.resource.size < 5 * 1024 * 1024  // 5MB 제한
+                   && request.resource.contentType.matches('image/.*');  // 이미지 파일만
+    }
+    
+    // 기타 모든 경로는 접근 금지
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+} 

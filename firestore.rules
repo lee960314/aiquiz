@@ -1,0 +1,37 @@
+// Firestore 보안 규칙
+// Firebase Console > Firestore Database > 규칙 탭에서 설정
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // quiz_history 컬렉션 - 인증된 사용자만 자신의 기록에 접근 가능
+    match /quiz_history/{document} {
+      // 읽기: 본인의 기록만 읽기 가능
+      allow read: if request.auth != null 
+                  && request.auth.uid == resource.data.userId;
+      
+      // 쓰기: 본인의 기록만 생성 가능, userId는 수정 불가
+      allow create: if request.auth != null 
+                    && request.auth.uid == request.resource.data.userId
+                    && request.resource.data.keys().hasAll(['userId', 'userEmail', 'imageUrl', 'answerText', 'createdAt'])
+                    && request.resource.data.userId is string
+                    && request.resource.data.userEmail is string
+                    && request.resource.data.imageUrl is string
+                    && request.resource.data.answerText is string;
+      
+      // 수정: 본인의 기록만 수정 가능 (userId는 변경 불가)
+      allow update: if request.auth != null 
+                    && request.auth.uid == resource.data.userId
+                    && request.auth.uid == request.resource.data.userId;
+      
+      // 삭제: 본인의 기록만 삭제 가능
+      allow delete: if request.auth != null 
+                    && request.auth.uid == resource.data.userId;
+    }
+    
+    // 다른 모든 컬렉션은 접근 거부
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+} 
